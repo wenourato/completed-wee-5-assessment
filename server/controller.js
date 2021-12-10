@@ -27,7 +27,7 @@ module.exports = {
                 city_id SERIAL PRIMARY KEY,
                 name VARCHAR(50),
                 rating INT NOT NULL,
-                country_id INT REFERENCE countries(country_id)
+                country_id INT REFERENCES countries(country_id)
             );
 
             insert into countries (name)
@@ -251,21 +251,22 @@ module.exports = {
        
 
        
-    },
-    getCities: (req,res) => {
-        sequelize.query(`SELECT city.city_id, city.name, country.country_id, country.name
-        FROM cities city
-        JOIN countries country 
-        ON city.country_id = country.country_id`)
+     },
+        getCities: (req,res) => {
+        sequelize.query(`SELECT ci.city_id, ci.name AS city, co.country_id, co.name AS country
+        FROM cities ci
+        JOIN countries co
+        ON co.country_id = ci.country_id
+        ORDER BY ci.rating DESC;`)
         .then(dbRes => res.status(200).send(dbRes[0]))
         .catch(err => console.log(err))
     },
-    // getCities: (req, res) => {
-    //     sequelize.query(`select cities, countries
-    //     from cities city_id, name (alias ‘city), rating countries: country_id, name
-    //     join where country_id = true`)
-        // .then(dbRes => res.status(200).send(dbRes[0]))
-        // .catch(err => console.log(err))
+    // // getCities: (req, res) => {
+    // //     sequelize.query(`select cities, countries
+    // //     from cities city_id, name (alias ‘city), rating countries: country_id, name
+    // //     join where country_id = true`)
+    //     // .then(dbRes => res.status(200).send(dbRes[0]))
+    //     // .catch(err => console.log(err))
 
 
         deleteCities: (req, res) => {
